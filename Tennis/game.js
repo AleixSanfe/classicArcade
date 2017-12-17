@@ -47,7 +47,6 @@ window.onload = function(){
 		else posY = mouseY - leftPadle.height/2;
 
 		leftPadle.y = posY;
-		rightPadle.y = posY;
 	});
 }
 
@@ -81,6 +80,11 @@ const game = () => {
 
 		if( (ball.x + ball.motion.x) < 15 && ballColidesPadle(ball.y,leftPadle) ) ball.motion.x *= -1;
 		if( (ball.x + ball.radius + ball.motion.x) > (canvas.width - 15) && ballColidesPadle(ball.y,rightPadle) ) ball.motion.x *= -1;
+	}
+
+	const moveRightPadle = () => {
+		if( ball.y < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 4.5;
+		if( ball.y > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 4.5;
 	}
 
 	const printLines = (numberOfLines,x,width,color) => {
@@ -122,5 +126,5 @@ const game = () => {
 
 	render();
 	nextFrame();
-
+	moveRightPadle();
 }
