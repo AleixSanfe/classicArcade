@@ -41,6 +41,14 @@ let stopButton = null;
 let pauseButton = null;
 let resumeButton = null;
 
+const changeButtonDisplays = (start,restart,stop,pause,resume) => {
+	startButton.parentNode.style.display = start;
+	restartButton.parentNode.style.display = restart;
+	stopButton.parentNode.style.display = stop;
+	pauseButton.parentNode.style.display = pause;
+	resumeButton.parentNode.style.display = resume;
+}
+
 window.onload = function(){
 
 	canvas = document.getElementById('gameCanvas');
@@ -71,11 +79,7 @@ window.onload = function(){
 		resetBall();
 		gameInterval = setInterval(game,1000 / framesPerSecond);
 
-		startButton.style.display = 'none';
-		restartButton.style.display = '';
-		stopButton.style.display = '';
-		pauseButton.style.display = '';
-		resumeButton.style.display = 'none';
+		changeButtonDisplays('none','','','','none');
 	});
 
 	restartButton.addEventListener('click',(event) => {
@@ -85,41 +89,25 @@ window.onload = function(){
 		resetBall();
 		gameInterval = setInterval(game,1000 / framesPerSecond);
 
-		startButton.style.display = 'none';
-		restartButton.style.display = '';
-		stopButton.style.display = '';
-		pauseButton.style.display = '';
-		resumeButton.style.display = 'none';
+		changeButtonDisplays('none','','','','none');
 	});
 
 	stopButton.addEventListener('click',(event) => {
 		clearInterval(gameInterval);
 
-		startButton.style.display = '';
-		restartButton.style.display = 'none';
-		stopButton.style.display = 'none';
-		pauseButton.style.display = 'none';
-		resumeButton.style.display = 'none';
+		changeButtonDisplays('','none','none','none','none');
 	});
 
 	pauseButton.addEventListener('click',(event) => {
 		clearInterval(gameInterval);
 
-		startButton.style.display = 'none';
-		restartButton.style.display = '';
-		stopButton.style.display = '';
-		pauseButton.style.display = 'none';
-		resumeButton.style.display = '';
+		changeButtonDisplays('none','','','none','');
 	});
 
 	resumeButton.addEventListener('click',(event) => {
 		gameInterval = setInterval(game,1000 / framesPerSecond);
 
-		startButton.style.display = 'none';
-		restartButton.style.display = '';
-		stopButton.style.display = '';
-		pauseButton.style.display = '';
-		resumeButton.style.display = 'none';
+		changeButtonDisplays('none','','','','none');
 	});
 }
 
