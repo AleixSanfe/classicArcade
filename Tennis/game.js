@@ -62,6 +62,12 @@ const calculateMousePos = (event) => {
 const resetBall = () => {
 	ball.x = (canvas.width - ball.radius)/2;
 	ball.y = (canvas.height - ball.radius)/2;
+
+	let Rx = Math.random();
+	let Ry = Math.random();
+
+	ball.motion.x = 5 * ( ( parseInt(Rx * 10) % 2 == 0) ? 1 : -1 );
+	ball.motion.y = 5 * ( ( parseInt(Ry * 10) % 2 == 0) ? 1 : -1 );
 }
 
 const game = () => {
@@ -78,13 +84,21 @@ const game = () => {
 		if( (ball.x + ball.motion.x) < 0 || (ball.x + ball.radius + ball.motion.x) > canvas.width ) resetBall();
 		if( (ball.y + ball.motion.y) < 0 || (ball.y + ball.radius + ball.motion.y) > canvas.height ) ball.motion.y *= -1;
 
-		if( (ball.x + ball.motion.x) < 15 && ballColidesPadle(ball.y,leftPadle) ) ball.motion.x *= -1;
-		if( (ball.x + ball.radius + ball.motion.x) > (canvas.width - 15) && ballColidesPadle(ball.y,rightPadle) ) ball.motion.x *= -1;
+		if( (ball.x + ball.motion.x) < 15 && ballColidesPadle(ball.y,leftPadle) ){
+			ball.motion.x *= -1;
+			let deltaY = ball.y - (leftPadle.y + leftPadle.height/2);
+			ball.motion.y = deltaY * 0.3;
+		}
+		if( (ball.x + ball.radius + ball.motion.x) > (canvas.width - 15) && ballColidesPadle(ball.y,rightPadle) ){
+			ball.motion.x *= -1;
+			let deltaY = ball.y - (rightPadle.y + rightPadle.height/2);
+			ball.motion.y = deltaY * 0.3;
+		}
 	}
 
 	const moveRightPadle = () => {
-		if( ball.y < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 4.5;
-		if( ball.y > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 4.5;
+		if( (ball.y+20) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 6;
+		if( (ball.y-20) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 6;
 	}
 
 	const printLines = (numberOfLines,x,width,color) => {
