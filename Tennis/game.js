@@ -36,6 +36,26 @@ window.onload = function(){
 	canvasContext = canvas.getContext('2d');
 
 	setInterval(game,1000 / framesPerSecond);
+	canvas.addEventListener('mousemove',(event) => {
+
+		let mouseY = calculateMousePos(event).y;
+		let posY = mouseY;
+
+		if( (mouseY - (leftPadle.height / 2) ) < 0 ) posY = 0;
+		else if( (mouseY + leftPadle.height ) > canvas.height ) posY = (canvas.height - leftPadle.height);
+		else posY = mouseY - leftPadle.height/2;
+
+		leftPadle.y = posY;
+	});
+}
+
+const calculateMousePos = (event) => {
+	let canvasBCR = canvas.getBoundingClientRect();
+	let documentRoot = document.documentElement;
+	return {
+		x: event.clientX - canvasBCR.left - documentRoot.scrollLeft,
+		y: event.clientY - canvasBCR.top - documentRoot.scrollTop
+	}
 }
 
 const game = () => {
