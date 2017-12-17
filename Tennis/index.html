@@ -12,7 +12,17 @@
 
 	<div class="top"></div>
 	<div class="main">
-		<canvas id="gameCanvas" width="800px" height="600px" style="max-width: 800px; max-height: 600px; align-self: center;"></canvas>
+		<div class="left">
+			<a href="../index.html" class="btn"><- Back</a>
+		</div>
+		<canvas id="gameCanvas" width="800px" height="600px" style="border: 1px solid white;border-radius: 10px;max-width: 800px; max-height: 600px; align-self: center;"></canvas>
+		<div class="right">
+			<button id="start" class="btn">Start</button>
+			<button id="restart" class="btn" style="display: none;">Restart</button>
+			<button id="stop" class="btn" style="display: none;">Stop</button>
+			<button id="pause" class="btn" style="display: none;">Pause</button>
+			<button id="resume" class="btn" style="display: none;">Resume</button>
+		</div>
 	</div>
 	<div class="bottom"></div>
 

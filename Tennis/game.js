@@ -33,13 +33,26 @@ let rightPadle = {
 let leftScore = 0;
 let rightScore = 0;
 
+
+let gameInterval = null;
+let startButton = null;
+let restartButton = null;
+let stopButton = null;
+let pauseButton = null;
+let resumeButton = null;
+
 window.onload = function(){
 
 	canvas = document.getElementById('gameCanvas');
 	canvasContext = canvas.getContext('2d');
 
+	startButton = document.getElementById('start');
+	restartButton = document.getElementById('restart');
+	stopButton = document.getElementById('stop');
+	pauseButton = document.getElementById('pause');
+	resumeButton = document.getElementById('resume');
+
 	resetBall();
-	setInterval(game,1000 / framesPerSecond);
 	canvas.addEventListener('mousemove',(event) => {
 
 		let mouseY = calculateMousePos(event).y;
@@ -50,6 +63,63 @@ window.onload = function(){
 		else posY = mouseY - leftPadle.height/2;
 
 		leftPadle.y = posY;
+	});
+
+	startButton.addEventListener('click',(event) => {
+		leftScore = 0;
+		rightScore = 0;
+		resetBall();
+		gameInterval = setInterval(game,1000 / framesPerSecond);
+
+		startButton.style.display = 'none';
+		restartButton.style.display = '';
+		stopButton.style.display = '';
+		pauseButton.style.display = '';
+		resumeButton.style.display = 'none';
+	});
+
+	restartButton.addEventListener('click',(event) => {
+		clearInterval(gameInterval);
+		leftScore = 0;
+		rightScore = 0;
+		resetBall();
+		gameInterval = setInterval(game,1000 / framesPerSecond);
+
+		startButton.style.display = 'none';
+		restartButton.style.display = '';
+		stopButton.style.display = '';
+		pauseButton.style.display = '';
+		resumeButton.style.display = 'none';
+	});
+
+	stopButton.addEventListener('click',(event) => {
+		clearInterval(gameInterval);
+
+		startButton.style.display = '';
+		restartButton.style.display = 'none';
+		stopButton.style.display = 'none';
+		pauseButton.style.display = 'none';
+		resumeButton.style.display = 'none';
+	});
+
+	pauseButton.addEventListener('click',(event) => {
+		clearInterval(gameInterval);
+
+		startButton.style.display = 'none';
+		restartButton.style.display = '';
+		stopButton.style.display = '';
+		pauseButton.style.display = 'none';
+		resumeButton.style.display = '';
+	});
+
+	resumeButton.addEventListener('click',(event) => {
+		gameInterval = setInterval(game,1000 / framesPerSecond);
+
+		startButton.style.display = 'none';
+		restartButton.style.display = '';
+		stopButton.style.display = '';
+		pauseButton.style.display = '';
+		resumeButton.style.display = 'none';
 	});
 }
 
