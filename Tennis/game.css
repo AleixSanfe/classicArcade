@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+
+body{
+	margin: 0px;
+	padding: 0px;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-family: 'Press Start 2P', cursive;
+}
+
+#leftScore{
+	align-self: center;
+	position: absolute;
+	color: white;top: 8vh;
+	left: calc(50vw - 75px);
+}
+
+#rightScore{
+	align-self: center;
+	position: absolute;
+	color: white;
+	top: 8vh;
+	left: calc(50vw + 75px);
+}
