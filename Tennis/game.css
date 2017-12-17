@@ -5,10 +5,34 @@ body{
 	padding: 0px;
 	width: 100vw;
 	height: 100vh;
+	font-family: 'Press Start 2P', cursive;
+}
+
+.top{
+	width: 100vw;
+	height: calc( (100vh - 600px) / 2);
+	margin: 0px;
+	padding: 0px;
+	background: linear-gradient(#423c3c, #8e8e85)
+}
+
+.main{
+	width: 100vw;
+	height: 600px;
+	padding: 0px;
+	margin: 0px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	font-family: 'Press Start 2P', cursive;
+	background-color: #8e8e85;
+}
+
+.bottom{
+	width: 100vw;
+	height: calc( (100vh - 600px) / 2);
+	margin: 0px;
+	padding: 0px;
+	background: linear-gradient(#8e8e85, #423c3c)
 }
 
 #leftScore{
