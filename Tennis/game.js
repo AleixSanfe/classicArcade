@@ -30,6 +30,9 @@ let rightPadle = {
 	color: 'white'
 }
 
+let leftScore = 0;
+let rightScore = 0;
+
 window.onload = function(){
 
 	canvas = document.getElementById('gameCanvas');
@@ -60,6 +63,13 @@ const calculateMousePos = (event) => {
 }
 
 const resetBall = () => {
+
+	let leftElementScore = document.getElementById('leftScore');
+	leftElementScore.innerHTML = leftScore;
+
+	let rightElementScore = document.getElementById('rightScore');
+	rightElementScore.innerHTML = rightScore;
+
 	ball.x = (canvas.width - ball.radius)/2;
 	ball.y = (canvas.height - ball.radius)/2;
 
@@ -73,6 +83,7 @@ const resetBall = () => {
 const game = () => {
 
 	const ballColidesPadle = (y,padle) => {
+
 		return (padle.y <= y && (padle.y+padle.height) >= y);
 	}
 
@@ -81,7 +92,15 @@ const game = () => {
 		ball.x += ball.motion.x;
 		ball.y += ball.motion.y;
 
-		if( (ball.x + ball.motion.x) < 0 || (ball.x + ball.radius + ball.motion.x) > canvas.width ) resetBall();
+		if( (ball.x + ball.motion.x) < 0 ){
+			rightScore++;
+			resetBall();
+		}
+		if( (ball.x + ball.radius + ball.motion.x) > canvas.width ){
+			leftScore++;
+			resetBall();
+		}
+
 		if( (ball.y + ball.motion.y) < 0 || (ball.y + ball.radius + ball.motion.y) > canvas.height ) ball.motion.y *= -1;
 
 		if( (ball.x + ball.motion.x) < 15 && ballColidesPadle(ball.y,leftPadle) ){
