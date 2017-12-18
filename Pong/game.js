@@ -33,40 +33,12 @@ let rightPadle = {
 let leftScore = 0;
 let rightScore = 0;
 
-
-let gameInterval = null;
-let startButton = null;
-let restartButton = null;
-let stopButton = null;
-let pauseButton = null;
-let resumeButton = null;
-
-const changeButtonDisplays = (start,restart,stop,pause,resume) => {
-	startButton.parentNode.style.display = start;
-	restartButton.parentNode.style.display = restart;
-	stopButton.parentNode.style.display = stop;
-	pauseButton.parentNode.style.display = pause;
-	resumeButton.parentNode.style.display = resume;
-}
-
-let audioElement = null;
-const playSoundEffect = (path) => {
-	audioElement = document.createElement('audio');
-	audioElement.setAttribute('src', path);
-	audioElement.play();
-
-}
-
 window.onload = function(){
 
 	canvas = document.getElementById('gameCanvas');
 	canvasContext = canvas.getContext('2d');
 
-	startButton = document.getElementById('start');
-	restartButton = document.getElementById('restart');
-	stopButton = document.getElementById('stop');
-	pauseButton = document.getElementById('pause');
-	resumeButton = document.getElementById('resume');
+	initializeEvents(resetGame);
 
 	resetBall();
 	canvas.addEventListener('mousemove',(event) => {
@@ -79,48 +51,6 @@ window.onload = function(){
 		else posY = mouseY - leftPadle.height/2;
 
 		leftPadle.y = posY;
-	});
-
-	startButton.addEventListener('click',(event) => {
-		leftScore = 0;
-		rightScore = 0;
-		resetBall();
-		gameInterval = setInterval(game,1000 / framesPerSecond);
-
-		changeButtonDisplays('none','','','','none');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
-
-	restartButton.addEventListener('click',(event) => {
-		clearInterval(gameInterval);
-		leftScore = 0;
-		rightScore = 0;
-		resetBall();
-		gameInterval = setInterval(game,1000 / framesPerSecond);
-
-		changeButtonDisplays('none','','','','none');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
-
-	stopButton.addEventListener('click',(event) => {
-		clearInterval(gameInterval);
-
-		changeButtonDisplays('','none','none','none','none');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
-
-	pauseButton.addEventListener('click',(event) => {
-		clearInterval(gameInterval);
-
-		changeButtonDisplays('none','','','none','');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
-
-	resumeButton.addEventListener('click',(event) => {
-		gameInterval = setInterval(game,1000 / framesPerSecond);
-
-		changeButtonDisplays('none','','','','none');
-		playSoundEffect('../resources/sound/menuSelection.wav');
 	});
 }
 
@@ -235,4 +165,10 @@ const game = () => {
 	render();
 	nextFrame();
 	moveRightPadle();
+}
+
+const resetGame = () => {
+	leftScore = 0;
+	rightScore = 0;
+	resetBall();
 }
