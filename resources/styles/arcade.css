@@ -8,6 +8,7 @@ body{
 	background-color: black;
 	font-family: 'Press Start 2P', cursive;
 	color: white;
+	overflow: hidden;
 }
 
 a{
@@ -46,6 +47,23 @@ a:visited{
 	width: 800px; 
 	height: 600px; 
 	align-self: center;
+	display: flex;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.center::-webkit-scrollbar {
+    width: 1px;
+}
+ 
+.center::-webkit-scrollbar-track {
+    -webkit-box-shadow: none;
+}
+ 
+.center::-webkit-scrollbar-thumb {
+  background-color: white;
+  outline:  none;
 }
 
 .right{
@@ -86,4 +104,37 @@ a:visited{
 	max-width: 800px; 
 	max-height: 600px; 
 	align-self: center;
+}
+
+.gameCard{
+	width: calc(100%/4 - 20px);
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 6px;
+    margin: 3px;
+    height: 150px;
+}
+
+.gameCard>h4{
+	margin: 0px;
+    height: 20%;
+    line-height: 30px;
+}
+
+.gameCard>p{
+	margin: 0px;
+    height: 60%;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.gameCard>hr{
+	margin: 0px;
+}
+
+.gameCard>div{
+	height: calc(20% - 2px);
+    margin: 0px;
+    line-height: 28px;
+    text-align: center;
 }
