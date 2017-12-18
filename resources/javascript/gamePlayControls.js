@@ -28,7 +28,6 @@ var initializeEvents = (resetGame) => {
 	pauseButton = document.getElementById('pause');
 	resumeButton = document.getElementById('resume');
 
-	console.log(',');
 	startButton.addEventListener('click',(event) => {
 		resetGame();
 		gameInterval = setInterval(game,1000 / framesPerSecond);
