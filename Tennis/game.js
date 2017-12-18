@@ -49,6 +49,14 @@ const changeButtonDisplays = (start,restart,stop,pause,resume) => {
 	resumeButton.parentNode.style.display = resume;
 }
 
+let audioElement = null;
+const playSoundEffect = (path) => {
+	audioElement = document.createElement('audio');
+	audioElement.setAttribute('src', path);
+	audioElement.play();
+
+}
+
 window.onload = function(){
 
 	canvas = document.getElementById('gameCanvas');
@@ -80,6 +88,7 @@ window.onload = function(){
 		gameInterval = setInterval(game,1000 / framesPerSecond);
 
 		changeButtonDisplays('none','','','','none');
+		playSoundEffect('../resources/sound/menuSelection.wav');
 	});
 
 	restartButton.addEventListener('click',(event) => {
@@ -90,24 +99,28 @@ window.onload = function(){
 		gameInterval = setInterval(game,1000 / framesPerSecond);
 
 		changeButtonDisplays('none','','','','none');
+		playSoundEffect('../resources/sound/menuSelection.wav');
 	});
 
 	stopButton.addEventListener('click',(event) => {
 		clearInterval(gameInterval);
 
 		changeButtonDisplays('','none','none','none','none');
+		playSoundEffect('../resources/sound/menuSelection.wav');
 	});
 
 	pauseButton.addEventListener('click',(event) => {
 		clearInterval(gameInterval);
 
 		changeButtonDisplays('none','','','none','');
+		playSoundEffect('../resources/sound/menuSelection.wav');
 	});
 
 	resumeButton.addEventListener('click',(event) => {
 		gameInterval = setInterval(game,1000 / framesPerSecond);
 
 		changeButtonDisplays('none','','','','none');
+		playSoundEffect('../resources/sound/menuSelection.wav');
 	});
 }
 
@@ -152,21 +165,25 @@ const game = () => {
 
 		if( (ball.x + ball.motion.x) < 0 ){
 			rightScore++;
+			playSoundEffect('../resources/sound/point.mp3');
 			resetBall();
 		}
 		if( (ball.x + ball.radius + ball.motion.x) > canvas.width ){
 			leftScore++;
+			playSoundEffect('../resources/sound/point.mp3');
 			resetBall();
 		}
 
 		if( (ball.y + ball.motion.y) < 0 || (ball.y + ball.radius + ball.motion.y) > canvas.height ) ball.motion.y *= -1;
 
 		if( (ball.x + ball.motion.x) < 15 && ballColidesPadle(ball.y,leftPadle) ){
+			playSoundEffect('../resources/sound/endpointHit.flac');
 			ball.motion.x *= -1;
 			let deltaY = ball.y - (leftPadle.y + leftPadle.height/2);
 			ball.motion.y = deltaY * 0.3;
 		}
 		if( (ball.x + ball.radius + ball.motion.x) > (canvas.width - 15) && ballColidesPadle(ball.y,rightPadle) ){
+			playSoundEffect('../resources/sound/endpointHit.flac');
 			ball.motion.x *= -1;
 			let deltaY = ball.y - (rightPadle.y + rightPadle.height/2);
 			ball.motion.y = deltaY * 0.3;
