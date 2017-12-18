@@ -66,3 +66,12 @@ var initializeEvents = (resetGame) => {
 		playSoundEffect('../resources/sound/menuSelection.wav');
 	});
 }
+
+var calculateMousePos = (event) => {
+	let canvasBCR = canvas.getBoundingClientRect();
+	let documentRoot = document.documentElement;
+	return {
+		x: event.clientX - canvasBCR.left - documentRoot.scrollLeft,
+		y: event.clientY - canvasBCR.top - documentRoot.scrollTop
+	}
+}

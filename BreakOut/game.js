@@ -13,6 +13,18 @@ window.onload = function(){
 	canvasContext = canvas.getContext('2d');
 
 	initializeEvents(resetGame);
+
+	canvas.addEventListener('mousemove',(event) => {
+
+		let mouseX = calculateMousePos(event).x;
+		let posX = mouseX;
+
+		if( (mouseX - (playerPadle.width / 2) ) < 0 ) posX = 0;
+		else if( (mouseX + playerPadle.width ) > canvas.width ) posX = (canvas.width - playerPadle.width);
+		else posX = mouseX - playerPadle.width/2;
+
+		playerPadle.x = posX;
+	});
 }
 
 const game = () => {

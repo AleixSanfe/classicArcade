@@ -54,15 +54,6 @@ window.onload = function(){
 	});
 }
 
-const calculateMousePos = (event) => {
-	let canvasBCR = canvas.getBoundingClientRect();
-	let documentRoot = document.documentElement;
-	return {
-		x: event.clientX - canvasBCR.left - documentRoot.scrollLeft,
-		y: event.clientY - canvasBCR.top - documentRoot.scrollTop
-	}
-}
-
 const resetBall = () => {
 
 	let leftElementScore = document.getElementById('leftScore');
