@@ -11,7 +11,8 @@ let ball = {
 	motion: {
 		x: 5,
 		y: 5
-	}
+	},
+	color: 'white'
 }
 
 let leftPadle = {
@@ -101,19 +102,53 @@ const game = () => {
 			playSoundEffect('../resources/sound/endpointHit.flac');
 			ball.motion.x *= -1;
 			let deltaY = ball.y - (leftPadle.y + leftPadle.height/2);
-			ball.motion.y = deltaY * 0.3;
+			ball.motion.y = deltaY * 0.25;
 		}
 		if( (ball.x + ball.radius + ball.motion.x) > (canvas.width - 15) && ballColidesPadle(ball.y,rightPadle) ){
 			playSoundEffect('../resources/sound/endpointHit.flac');
 			ball.motion.x *= -1;
 			let deltaY = ball.y - (rightPadle.y + rightPadle.height/2);
-			ball.motion.y = deltaY * 0.3;
+			ball.motion.y = deltaY * 0.25;
 		}
 	}
 
 	const moveRightPadle = () => {
-		if( (ball.y+20) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 6;
-		if( (ball.y-20) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 6;
+
+		const predictYcoord = () => {
+
+			/*let phantomBall = { x: 0, y: 0, radius: 10, motion: { x: 5, y: 5 }, color: 'white' };
+			phantomBall.color = 'red';*/
+
+			let phantomMotion = {x: ball.motion.x, y: ball.motion.y};
+			let phantomPosition = {x: ball.x, y: ball.y};
+
+			for(let i = 1; i < 25; ++i){
+				phantomPosition.x = (phantomMotion.x) + phantomPosition.x;
+				phantomPosition.y = (phantomMotion.y) + phantomPosition.y;
+
+				if( (phantomPosition.x + phantomMotion.x) < 0 || (phantomPosition.x + phantomMotion.x) > canvas.width ) phantomMotion.x *= -1;
+				if( (phantomPosition.y + phantomMotion.y) < 0 || (phantomPosition.y + phantomMotion.y) > canvas.height ) phantomMotion.y *= -1;
+
+				/*phantomBall.x = phantomPosition.x;
+				phantomBall.y = phantomPosition.y;
+				printBall(phantomBall);*/
+
+				if( phantomPosition.x == 0 || phantomPosition.x == canvas.width) return phantomPosition.y;
+			}
+			return null
+		}
+
+		let predictedYcoord = predictYcoord();
+
+		if(predictedYcoord){
+			if( (predictedYcoord) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 6;
+			if( (predictedYcoord) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 6;
+
+		} else{
+			if( (ball.y) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 6;
+			if( (ball.y) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 6;
+		}
+
 	}
 
 	const printLines = (numberOfLines,x,width,color) => {
@@ -130,11 +165,11 @@ const game = () => {
 		canvasContext.fillRect(padle.x,padle.y,padle.width,padle.height);
 	}
 
-	const printBall = () => {
+	const printBall = (bBall) => {
 
-		canvasContext.fillStyle = 'white';
+		canvasContext.fillStyle = bBall.color;
 		canvasContext.beginPath();
-		canvasContext.arc(ball.x,ball.y,ball.radius,0,2*Math.PI);
+		canvasContext.arc(bBall.x,bBall.y,bBall.radius,0,2*Math.PI);
 		canvasContext.fill();
 	}
 
@@ -147,7 +182,9 @@ const game = () => {
 		printLines(20,canvas.width/2 - 1,2,'white');
 		printLines(20,canvas.width - 11,2,'white');
 
-		printBall();
+		printBall(ball);
+
+		
 
 		printPadle(leftPadle);
 		printPadle(rightPadle);
@@ -163,3 +200,4 @@ const resetGame = () => {
 	rightScore = 0;
 	resetBall();
 }
+
