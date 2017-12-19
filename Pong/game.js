@@ -42,6 +42,18 @@ window.onload = function(){
 	initializeEvents(resetGame);
 
 	resetBall();
+	/*document.addEventListener('keydown',(event) => {
+		//console.log('HEY');
+		switch(event.keyCode){
+			case 38:
+				leftPadle.y -= 15;
+				break;
+			case 40:
+				leftPadle.y += 15;
+				break;
+		}
+	},false);*/
+
 	canvas.addEventListener('mousemove',(event) => {
 
 		let mouseY = calculateMousePos(event).y;
@@ -102,13 +114,13 @@ const game = () => {
 			playSoundEffect('../resources/sound/endpointHit.flac');
 			ball.motion.x *= -1;
 			let deltaY = ball.y - (leftPadle.y + leftPadle.height/2);
-			ball.motion.y = deltaY * 0.25;
+			ball.motion.y = deltaY * 0.2;
 		}
 		if( (ball.x + ball.radius + ball.motion.x) > (canvas.width - 15) && ballColidesPadle(ball.y,rightPadle) ){
 			playSoundEffect('../resources/sound/endpointHit.flac');
 			ball.motion.x *= -1;
 			let deltaY = ball.y - (rightPadle.y + rightPadle.height/2);
-			ball.motion.y = deltaY * 0.25;
+			ball.motion.y = deltaY * 0.2;
 		}
 	}
 
@@ -141,12 +153,12 @@ const game = () => {
 		let predictedYcoord = predictYcoord();
 
 		if(predictedYcoord){
-			if( (predictedYcoord) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 6;
-			if( (predictedYcoord) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 6;
+			if( (predictedYcoord) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 5;
+			if( (predictedYcoord) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 5;
 
 		} else{
-			if( (ball.y) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 6;
-			if( (ball.y) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 6;
+			if( (ball.y) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 5;
+			if( (ball.y) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 5;
 		}
 
 	}
@@ -183,8 +195,6 @@ const game = () => {
 		printLines(20,canvas.width - 11,2,'white');
 
 		printBall(ball);
-
-		
 
 		printPadle(leftPadle);
 		printPadle(rightPadle);
