@@ -103,7 +103,7 @@ const game = () => {
 
 	const printWallPadle = (padle) => {
 
-		canvasContext.fillStyle = COLORS[ padle.life - 1 % COLORS.length ];
+		canvasContext.fillStyle = COLORS[ (padle.life - 1) % COLORS.length ];
 		canvasContext.fillRect(
 			padle.x + padle.margin,
 			padle.y + padle.margin,
@@ -131,7 +131,6 @@ const game = () => {
 		for(let i = 0; i < wallPadles.length; ++i){
 			(wallPadles[i].life > 0) ? printWallPadle(wallPadles[i]) : '';
 		}
-		
 	}
 
 	render();
@@ -141,6 +140,7 @@ const game = () => {
 const resetGame = () => {
 
 	wallPadles = [];
+
 	for(let i = 0; i < 4; i++){
 		for(let j = 0; j < (canvas.width / 100); j++){
 
@@ -148,7 +148,6 @@ const resetGame = () => {
 			newPadle.x = ( j * 100);
 			newPadle.y = ( (i+2) * 20 );
 			newPadle.life -= (i + 1);
-			console.log(newPadle.life);
 			wallPadles.push(newPadle);
 		}
 	}
