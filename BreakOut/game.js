@@ -4,8 +4,23 @@ let canvasContext;
 
 let framesPerSecond = 60;
 
+const COLORS = [ 'rgba(255,0,0,1)' , 'rgba(255,255,0,1)', 'rgba(0,255,0,1)', 'rgba(0,255,255,1)', 'rgba(0,0,255,1)', 'rgba(255,0,255,1)' ];
+
+let lives = 3;
+
 let playerPadle = { x: 350, y: 580, width: 100, height: 10, color: 'white'};
 let wallPadles = [];
+
+let ball = {
+	x: 0,
+	y: 0,
+	radius: 10,
+	motion: {
+		x: 0,
+		y: 5
+	},
+	color: 'white'
+}
 
 window.onload = function(){
 
@@ -29,7 +44,54 @@ window.onload = function(){
 
 const game = () => {
 
+	const ballColidesPadle = (x,padle) => {
+
+		return ( padle.x <= x && x <= (padle.x+padle.width) );
+	}
+
+	const ballColidesAnyWall = (x,y,x1,y1,r) => {
+
+		for(let i = 0; i < wallPadles.length; ++i){
+
+			let padle = wallPadles[i];
+			if( padle.life > 0 && padle.x <= (x1+r) && (x1-r) <= (padle.x + padle.width) && padle.y <= (y1+r) && (y1-r) <= (padle.y + padle.height) ){
+
+				padle.life -= 1;
+
+				if( padle.x <= (x+r) && (x-r) <= (padle.x + padle.width) && padle.y <= (y+r) ) return 1;
+				if( padle.x <= (x+r) && (x-r) <= (padle.x + padle.width) && (y-r) <= (padle.y+padle.height) )return 1;
+
+				if( padle.y <= (y+r) && (y-r) <= (padle.y + padle.height) && padle.x <= (x+r) )return 2;
+				if( padle.y <= (y-r) && (y+r) <= (padle.y + padle.height) && (x-r) <= (padle.x+padle.width) )return 2;
+			}
+		}
+		return -1;
+	}
+
 	const nextFrame = () => {
+
+		ball.x += ball.motion.x;
+		ball.y += ball.motion.y;
+
+		if( (ball.x + ball.motion.x) < 0 || (ball.x + ball.radius + ball.motion.x) > canvas.width ) ball.motion.x *= -1;
+
+		if( (ball.y + ball.motion.y) > canvas.height ){
+			--lives;
+			ball.motion.y *= -1;
+			//TODO: if lives == 0 => stopGame();
+		}
+
+		if( (ball.y + ball.motion.y) < 0 ) ball.motion.y *= -1;
+
+		if( (ball.y + ball.motion.y) > playerPadle.y && ballColidesPadle(ball.x,playerPadle) ){
+			playSoundEffect('../resources/sound/endpointHit.flac');
+			ball.motion.y *= -1;
+			let deltaX = ball.x - (playerPadle.x + playerPadle.width/2);
+			ball.motion.x = deltaX * 0.15;
+		}
+
+		let r = ballColidesAnyWall(ball.x,ball.y,(ball.x+ball.motion.x),(ball.y+ball.motion.y),ball.radius);
+		if( r != -1 ) (r%2 == 0) ? (ball.motion.x *= -1) : (ball.motion.y *= -1) ;
 
 	}
 
@@ -41,21 +103,21 @@ const game = () => {
 
 	const printWallPadle = (padle) => {
 
-		canvasContext.fillStyle = 'rgba(255,127,127,1)';
+		canvasContext.fillStyle = COLORS[ padle.life - 1 % COLORS.length ];
 		canvasContext.fillRect(
 			padle.x + padle.margin,
 			padle.y + padle.margin,
 			padle.width - (padle.margin*2),
 			padle.height - (padle.margin*2)
 		);
+	}
 
-		canvasContext.fillStyle = 'rgba(255,0,0,1)';
-		canvasContext.fillRect(
-			padle.x + padle.padding + padle.margin,
-			padle.y + padle.padding + padle.margin,
-			padle.width - ( (padle.padding+padle.margin)*2 ),
-			padle.height - ( (padle.padding+padle.margin)*2 )
-		);
+	const printBall = (bBall) => {
+
+		canvasContext.fillStyle = bBall.color;
+		canvasContext.beginPath();
+		canvasContext.arc(bBall.x,bBall.y,bBall.radius,0,2*Math.PI);
+		canvasContext.fill();
 	}
 
 	const render = () => {
@@ -64,8 +126,10 @@ const game = () => {
 		canvasContext.fillRect(0,0,canvas.width,canvas.height);
 		printPadle(playerPadle);
 
+		printBall(ball);
+
 		for(let i = 0; i < wallPadles.length; ++i){
-			(wallPadles[i].alive) ? printWallPadle(wallPadles[i]) : '';
+			(wallPadles[i].life > 0) ? printWallPadle(wallPadles[i]) : '';
 		}
 		
 	}
@@ -80,11 +144,15 @@ const resetGame = () => {
 	for(let i = 0; i < 4; i++){
 		for(let j = 0; j < (canvas.width / 100); j++){
 
-			let newPadle = { x: 350, y: 200, width: 100, height: 20, color: {r: 255, g: 0, b: 0, a: 1},borderColor: {r: 255, g: 127, b: 127, a: 1}, padding: 3,margin: 1, life: 5, alive: true};
+			let newPadle = { x: 350, y: 200, width: 100, height: 20,margin: 1, life: 5};
 			newPadle.x = ( j * 100);
 			newPadle.y = ( (i+2) * 20 );
-			newPadle.life -= i;
+			newPadle.life -= (i + 1);
+			console.log(newPadle.life);
 			wallPadles.push(newPadle);
 		}
 	}
+
+	ball.x = canvas.width/2;
+	ball.y = canvas.height*0.75;
 }

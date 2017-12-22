@@ -160,7 +160,6 @@ const game = () => {
 			if( (ball.y) < rightPadle.y+(rightPadle.height/2) ) rightPadle.y -= 5;
 			if( (ball.y) > rightPadle.y+(rightPadle.height/2) ) rightPadle.y += 5;
 		}
-
 	}
 
 	const printLines = (numberOfLines,x,width,color) => {
