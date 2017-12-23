@@ -49,20 +49,27 @@ const game = () => {
 		return ( padle.x <= x && x <= (padle.x+padle.width) );
 	}
 
-	const ballColidesAnyWall = (x,y,x1,y1,r) => {
+	const ballColidesAnyWall = (x,y) => {
 
 		for(let i = 0; i < wallPadles.length; ++i){
 
 			let padle = wallPadles[i];
-			if( padle.life > 0 && padle.x <= (x1+r) && (x1-r) <= (padle.x + padle.width) && padle.y <= (y1+r) && (y1-r) <= (padle.y + padle.height) ){
+			if( padle.life > 0 && padle.x <= x && x <= (padle.x + padle.width) && padle.y <= y && y <= (padle.y + padle.height) ){
 
 				padle.life -= 1;
 
-				if( padle.x <= (x+r) && (x-r) <= (padle.x + padle.width) && padle.y <= (y+r) ) return 1;
-				if( padle.x <= (x+r) && (x-r) <= (padle.x + padle.width) && (y-r) <= (padle.y+padle.height) )return 1;
+				let relX = x - padle.x;
+				let relY = y - padle.y;
 
-				if( padle.y <= (y+r) && (y-r) <= (padle.y + padle.height) && padle.x <= (x+r) )return 2;
-				if( padle.y <= (y-r) && (y+r) <= (padle.y + padle.height) && (x-r) <= (padle.x+padle.width) )return 2;
+				let relPWX = padle.width;
+				let relPHY = padle.height;
+
+				let RATIO = relPHY/relPWX;
+
+				if( relY <= (relPHY/2) && relY <= RATIO*relX  			&& relY <= (relPWX-relX)*RATIO ) 	return 1;
+				if( relX >  (relPWX/2) && relY <  RATIO*relX  			&& relY >  (relPWX-relX)*RATIO ) 	return 2;
+				if( relY >= (relPHY/2) && relY >= (relPWX-relX)*RATIO 	&& relY >= RATIO*relX ) 			return 3;
+				if( relX <  (relPWX/2) && relY >  RATIO*relX  			&& relY <  (relPWX-relX) ) 			return 4;
 			}
 		}
 		return -1;
@@ -90,7 +97,7 @@ const game = () => {
 			ball.motion.x = deltaX * 0.15;
 		}
 
-		let r = ballColidesAnyWall(ball.x,ball.y,(ball.x+ball.motion.x),(ball.y+ball.motion.y),ball.radius);
+		let r = ballColidesAnyWall(ball.x,ball.y,ball.radius);
 		if( r != -1 ) (r%2 == 0) ? (ball.motion.x *= -1) : (ball.motion.y *= -1) ;
 
 	}
@@ -141,10 +148,10 @@ const resetGame = () => {
 
 	wallPadles = [];
 
-	for(let i = 0; i < 4; i++){
+	for(let i = 0; i < 6; i++){
 		for(let j = 0; j < (canvas.width / 100); j++){
 
-			let newPadle = { x: 350, y: 200, width: 100, height: 20,margin: 1, life: 5};
+			let newPadle = { x: 350, y: 200, width: 100, height: 20,margin: 1, life: 6};
 			newPadle.x = ( j * 100);
 			newPadle.y = ( (i+2) * 20 );
 			newPadle.life -= (i + 1);
