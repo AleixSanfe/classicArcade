@@ -1,4 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+@font-face {
+  font-family: 'Arcade';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Press Start 2P Regular'), local('PressStart2P-Regular'), url(https://fonts.gstatic.com/s/pressstart2p/v6/8Lg6LX8-ntOHUQnvQ0E7o08SWvhA5BcWCS8xVZDIH7E.woff2) format('woff2');
+}
 
 body{
 	margin: 0px;
@@ -6,7 +11,7 @@ body{
 	width: 100vw;
 	height: 100vh;
 	background-color: black;
-	font-family: 'Press Start 2P', cursive;
+	font-family: 'Arcade';
 	color: white;
 	overflow: hidden;
 }
@@ -84,7 +89,7 @@ a:visited{
     height: 35px;
     background-color: rgba(0,0,0,0);
     color: white;
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'Arcade', cursive;
     border: none;
     padding: 10px;
     text-decoration: none;

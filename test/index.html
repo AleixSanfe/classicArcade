@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TESTING</title>
+
+</head>
+<body id="body" style="margin: 0px;width: 100vw;height: 100vh;justify-content: center;flex-direction: row; display: flex;">
+<canvas id="canvas" style="width: 100vw; height: 100vh; align-self: center; border: 0px solid black;" width="100vw" height="100vh"></canvas>
+</body>
+
+<script type="text/javascript">
+	
+
+	var canvas = document.getElementById('canvas');
+	var body = document.getElementById('body');
+
+	console.log(window.innerWidth);
+ 	console.log(window.innerHeight);
+
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+
+	var ctx = canvas.getContext('2d');
+
+	var canvasWidth  = canvas.width;
+	var canvasHeight = canvas.height;
+
+	const HEIGHT = 20;
+	const WIDTH = 100;
+	const X = 100;
+	const Y = 100;
+
+	
+	ctx.fillStyle = 'red';
+    ctx.fillRect(0,0,canvasWidth,canvasHeight);
+
+    var imageData2 = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+    var data2 = imageData2.data;
+    for (var y = 0; y < canvasHeight; ++y) {
+    	for (var x = 0; x < canvasWidth; ++x) {
+    		var index = (y * canvasWidth + x) * 4;
+
+    		data2[index] = 255;
+    		data2[index+1] = 0;
+    		data2[index+2] = 0;
+    		data2[index+3] = 127;
+
+    		var reelX = x - (WIDTH/2 + X);
+    		var reelY = y - (HEIGHT/2 + Y);
+    		let m = (HEIGHT/WIDTH);
+
+    		if( reelX >= 0 && reelY >= 0 ){
+
+    			if( reelY < m*reelX ){
+    				data2[index] = 0;
+		    		data2[index+1] = 0;
+		    		data2[index+2] = 0;
+		    		data2[index+3] = 255; 
+    			}
+    			else{
+    				data2[index] = 255;
+		    		data2[index+1] = 255;
+		    		data2[index+2] = 255;
+		    		data2[index+3] = 255; 
+    			}
+
+    		}
+    		else if( reelX < 0 && reelY >= 0 ){
+
+	    		if( reelY < -1*m*reelX ){
+    				data2[index] = 0;
+		    		data2[index+1] = 0;
+		    		data2[index+2] = 0;
+		    		data2[index+3] = 255; 
+    			}
+    			else{
+    				data2[index] = 255;
+		    		data2[index+1] = 255;
+		    		data2[index+2] = 255;
+		    		data2[index+3] = 255; 
+    			}
+    		}
+    		else if( reelX <= 0 && reelY < 0){
+
+	    		if( reelY < m*reelX ){
+    				data2[index] = 255;
+		    		data2[index+1] = 255;
+		    		data2[index+2] = 255;
+		    		data2[index+3] = 255;
+    			}
+    			else{
+    				data2[index] = 0;
+		    		data2[index+1] = 0;
+		    		data2[index+2] = 0;
+		    		data2[index+3] = 255; 
+    			}
+    		}
+    		else if( reelX > 0 && reelY < 0){
+    			
+	    		if( reelY < -1*m*reelX ){
+    				data2[index] = 255;
+		    		data2[index+1] = 255;
+		    		data2[index+2] = 255;
+		    		data2[index+3] = 255;
+    			}
+    			else{
+    				data2[index] = 0;
+		    		data2[index+1] = 0;
+		    		data2[index+2] = 0;
+		    		data2[index+3] = 255; 
+    			}
+    		}
+    		else {
+    			data2[index] = 255;
+	    		data2[index+1] = 0;
+	    		data2[index+2] = 0;
+	    		data2[index+3] = 255;
+    		}
+
+    	}
+    }
+    ctx.putImageData(imageData2, 0, 0);
+
+
+	var imageData = ctx.getImageData(0, 0, WIDTH, HEIGHT);
+	var data = imageData.data;
+	for (var y = 0; y < HEIGHT; ++y) {
+    	for (var x = 0; x < WIDTH; ++x) {
+    		var index = (y * WIDTH + x) * 4;
+
+    		data[index] = 0;
+    		data[index+1] = 0;
+    		data[index+2] = 0;
+    		data[index+3] = 127;
+
+    		let RATIO = (HEIGHT/WIDTH);
+
+    		if( y <= (HEIGHT/2) && y <= RATIO*x && y <= (WIDTH-x)*RATIO ){
+    			data[index] = 255;
+	    		data[index+1] = 0;
+	    		data[index+2] = 0;
+	    		data[index+3] = 127; 
+    		}
+
+    		else if( x > (WIDTH/2) && y < RATIO*x && y > (WIDTH-x)*RATIO ){
+    			data[index] = 0;
+	    		data[index+1] = 0;
+	    		data[index+2] = 255;
+	    		data[index+3] = 127; 
+    		}
+
+    		else if( y >= (HEIGHT/2) && y >= (WIDTH-x)*RATIO && y >= RATIO*x ){
+    			data[index] = 0;
+	    		data[index+1] = 255;
+	    		data[index+2] = 0;
+	    		data[index+3] = 127; 
+    		}
+
+    		else if( x < (WIDTH/2) && y > RATIO*x && y < (WIDTH-x)*RATIO ){
+    			data[index] = 255;
+	    		data[index+1] = 255;
+	    		data[index+2] = 0;
+	    		data[index+3] = 127;
+    		}
+
+    		else {
+    			data[index] = 255;
+	    		data[index+1] = 255;
+	    		data[index+2] = 255;
+	    		data[index+3] = 127;
+    		}
+
+    	}
+    }
+    ctx.putImageData(imageData, X, Y);
+
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.arc(100,100,10,0,2*Math.PI);
+    ctx.fill();
+
+    /*if(y < (canvasHeight/2) ){
+
+		if(x <= (canvasWidth/2)){
+
+			if(y < (canvasHeight/canvasWidth)*x ){
+				//RED
+				data[index] = 255;
+	    		data[index+1] = 0;
+	    		data[index+2] = 0;
+	    		data[index+3] = 255;  
+	    	}
+	 	   	else if(y > (canvasHeight/canvasWidth)*x ){
+	    		//YELLOW
+	    		data[index] = 255;
+	    		data[index+1] = 255;
+	    		data[index+2] = 0;
+	    		data[index+3] = 255; 
+	    	}
+
+		}
+		else if(x > (canvasWidth/2)){
+
+			if( y < (canvasWidth-x) ){
+				data[index] = 255;
+	    		data[index+1] = 0;
+	    		data[index+2] = 0;
+	    		data[index+3] = 255;
+	    	}
+	    	else if( y > (canvasWidth-x)/2 ){
+	    		data[index] = 0;
+	    		data[index+1] = 255;
+	    		data[index+2] = 0;
+	    		data[index+3] = 255; 
+	    	}
+		}
+	}
+	else if(y >= (canvasHeight/2) ){
+
+		if(x <= (canvasWidth/2)){
+
+			if( y < (canvasWidth-x) ){
+				data[index] = 255;
+	    		data[index+1] = 255;
+	    		data[index+2] = 0;
+	    		data[index+3] = 255;   
+	    	}
+	    	else if( y > (canvasWidth-x)/2 ){
+	    		data[index] = 0;
+	    		data[index+1] = 0;
+	    		data[index+2] = 255;
+	    		data[index+3] = 255; 
+	    	}
+
+		}
+		else if(x > (canvasWidth/2)){
+
+			if(y < (canvasHeight/canvasWidth)*x ){
+				data[index] = 0;
+	    		data[index+1] = 255;
+	    		data[index+2] = 0;
+	    		data[index+3] = 255;  
+	    	}
+	    	else if(y > (canvasHeight/canvasWidth)*x ){
+	    		data[index] = 0;
+	    		data[index+1] = 0;
+	    		data[index+2] = 255;
+	    		data[index+3] = 255; 
+	    	}
+		}
+	}*/
+
+</script>
+
+</html>
