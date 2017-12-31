@@ -1,12 +1,13 @@
 
-let canvas;
+var canvas;
 let canvasContext;
 
 let framesPerSecond = 60;
 
 const COLORS = [ 'rgba(255,0,0,1)' , 'rgba(255,255,0,1)', 'rgba(0,255,0,1)', 'rgba(0,255,255,1)', 'rgba(0,0,255,1)', 'rgba(255,0,255,1)' ];
 
-let lives = 30;
+const MAX_LIVES = 5;
+let lives = 5;
 
 let playerPadle = { x: 350, y: 580, width: 100, height: 10, color: 'white'};
 
@@ -30,11 +31,8 @@ window.onload = function(){
     canvas = document.getElementById('gameCanvas');
     canvasContext = canvas.getContext('2d');
 
-    canvasContext.font = "50px Arcade";
-    canvasContext.fillStyle = "red";
-    canvasContext.fillText("Hello World",10,50);
 
-    canvas.addEventListener('mousemove',(event) => {
+    const updatePlayersPadlePosition = (event) => {
 
         let mouseX = calculateMousePos(event).x;
         let posX = mouseX;
@@ -44,24 +42,22 @@ window.onload = function(){
         else posX = mouseX - playerPadle.width/2;
 
         playerPadle.x = posX;
-    });
+    }
 
-    let isGameRuning = false;
-    let isNewGame = true;
-    let gameInterval = null;
-    window.addEventListener('keypress',(event) => {
-        if(event.keyCode == 32){
-            if(!isGameRuning){
-                if(isNewGame)resetGame();
-                isNewGame=false;
-                gameInterval = setInterval(game,1000 / framesPerSecond);
-                isGameRuning=true;
-            }else{
-                clearInterval(gameInterval);
-                isGameRuning=false;
-            }
-        }
-    });
+    const previewGame = () => {
+
+        printWallPadles();
+
+        resetWallPadles();
+
+        canvasContext.font = "20px Arcade";
+        canvasContext.fillStyle = "white";
+        canvasContext.textAlign = 'center';
+        canvasContext.fillText("Press space to start the game!",canvas.width/2,canvas.height/2);
+        canvasContext.fillText("Press space again to pause it",canvas.width/2,canvas.height/2 + 45);
+    }
+
+    initializeEvents(canvas,game,resetGame,previewGame,updatePlayersPadlePosition);
 }
 
 const game = () => {
@@ -72,7 +68,6 @@ const game = () => {
     }
 
     const ballColidesAnyWall = (x,y,r) => {
-
 
         let top = null;
         let left = null;
@@ -189,7 +184,7 @@ const game = () => {
 
         if( (ball.y + ball.motion.y) > canvas.height ){
             --lives;
-            if(lives < 0) resetGame;
+            if(lives <= 0) resetGame();
             else{
                 ball.x = canvas.width/2;
                 ball.y = canvas.height*0.75;
@@ -197,8 +192,6 @@ const game = () => {
                 ball.motion.x = 0;
                 ball.motion.y = 6;
             }
-            //ball.motion.y *= -1;
-            //TODO: if lives == 0 => stopGame();
         }
 
         if( (ball.y + ball.motion.y) < 0 ) ball.motion.y *= -1;
@@ -211,7 +204,6 @@ const game = () => {
         }
 
         let r = ballColidesAnyWall(ball.x + ball.motion.x, ball.y + ball.motion.y, ball.radius);
-        if(r == -1)console.log(r+ ' \n **********');
         switch( r ){
             case 1: ball.motion.y *= -1; break;
             case 2: ball.motion.x *= -1; break;
@@ -222,20 +214,6 @@ const game = () => {
 
         canvasContext.fillStyle = padle.color;
         canvasContext.fillRect(padle.x,padle.y,padle.width,padle.height);
-    }
-
-    const printWallPadle = (padle) => {
-
-        let dx = ( padle.x + (padle.width/2) ) - ball.x;
-        let dy = ( padle.y + (padle.height/2) ) - ball.y;
-
-        canvasContext.fillStyle = COLORS[ (padle.life - 1) % COLORS.length ];
-        canvasContext.fillRect(
-            padle.x + padle.margin,
-            padle.y + padle.margin,
-            padle.width - (padle.margin*2),
-            padle.height - (padle.margin*2)
-        );
     }
 
     const printBall = (bBall) => {
@@ -254,21 +232,38 @@ const game = () => {
 
         printBall(ball);
 
-        for(let i = 0; i < wallPadles.length; ++i){
-            let padle = wallPadles[i];
-            (wallPadles[i].life > 0) ? printWallPadle(wallPadles[i]) : '';
-        }
+        printWallPadles();
     }
 
     render();
     nextFrame();
 }
 
-const resetGame = () => {
+const printWallPadles = () => {
+
+    const printWallPadle = (padle) => {
+
+        let dx = ( padle.x + (padle.width/2) ) - ball.x;
+        let dy = ( padle.y + (padle.height/2) ) - ball.y;
+
+        canvasContext.fillStyle = COLORS[ (padle.life - 1) % COLORS.length ];
+        canvasContext.fillRect(
+            padle.x + padle.margin,
+            padle.y + padle.margin,
+            padle.width - (padle.margin*2),
+            padle.height - (padle.margin*2)
+        );
+    }
+
+    for(let i = 0; i < wallPadles.length; ++i){
+        let padle = wallPadles[i];
+        (wallPadles[i].life > 0) ? printWallPadle(wallPadles[i]) : '';
+    }
+}
+
+const resetWallPadles = () => {
 
     wallPadles = [];
-
-    let k = 0;
     for(let i = 0; i < 6; i++){
         for(let j = 0; j < (canvas.width / WALL_PADLE_WIDTH); j++){
 
@@ -277,13 +272,19 @@ const resetGame = () => {
             newPadle.y = ( (i+1) * WALL_PADLE_HEIGHT );
             newPadle.life =  parseInt(Math.random()*10) % 7;
             wallPadles.push(newPadle);
-            ++k;
         }
     }
+}
+
+const resetGame = () => {
+
+    resetWallPadles();
 
     ball.x = canvas.width/2;
     ball.y = canvas.height*0.75;
 
     ball.motion.x = 0;
     ball.motion.y = 6;
+
+    lives = MAX_LIVES;
 }

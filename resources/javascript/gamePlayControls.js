@@ -1,17 +1,8 @@
 let gameInterval = null;
-let startButton = null;
-let restartButton = null;
-let stopButton = null;
-let pauseButton = null;
-let resumeButton = null;
+let previewInterval = null;
 
-const changeButtonDisplays = (start,restart,stop,pause,resume) => {
-	startButton.parentNode.style.display = start;
-	restartButton.parentNode.style.display = restart;
-	stopButton.parentNode.style.display = stop;
-	pauseButton.parentNode.style.display = pause;
-	resumeButton.parentNode.style.display = resume;
-}
+let isGameRuning = false;
+let isNewGame = true;
 
 let audioElement = null;
 var playSoundEffect = (path) => {
@@ -20,51 +11,33 @@ var playSoundEffect = (path) => {
 	audioElement.play();
 }
 
-var initializeEvents = (resetGame) => {
+var initializeEvents = (canvas,game,resetFunction,previewFunction,mouseCallback) => {
 
-	startButton = document.getElementById('start');
-	restartButton = document.getElementById('restart');
-	stopButton = document.getElementById('stop');
-	pauseButton = document.getElementById('pause');
-	resumeButton = document.getElementById('resume');
+	canvas.addEventListener('mousemove',(event) => mouseCallback(event) );
 
-	startButton.addEventListener('click',(event) => {
-		resetGame();
-		gameInterval = setInterval(game,1000 / framesPerSecond);
+    window.addEventListener('keypress',(event) => {
+        if(event.keyCode == 32){
 
-		changeButtonDisplays('none','','','','none');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
+        	if(!isGameRuning){
 
-	restartButton.addEventListener('click',(event) => {
-		clearInterval(gameInterval);
-		resetGame();
-		gameInterval = setInterval(game,1000 / framesPerSecond);
+        		isGameRuning = true;
 
-		changeButtonDisplays('none','','','','none');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
+        		if(isNewGame){
+        			isNewGame = false;
+        			clearInterval(previewInterval);
+        			resetFunction();
+        		}
+        		gameInterval = setInterval(game,1000 / framesPerSecond);
 
-	stopButton.addEventListener('click',(event) => {
-		clearInterval(gameInterval);
+        	}else{
+        		clearInterval(gameInterval);
+        		isGameRuning = false;
+        	}
+        }
+    });
 
-		changeButtonDisplays('','none','none','none','none');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
-
-	pauseButton.addEventListener('click',(event) => {
-		clearInterval(gameInterval);
-
-		changeButtonDisplays('none','','','none','');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
-
-	resumeButton.addEventListener('click',(event) => {
-		gameInterval = setInterval(game,1000 / framesPerSecond);
-
-		changeButtonDisplays('none','','','','none');
-		playSoundEffect('../resources/sound/menuSelection.wav');
-	});
+    previewInterval = setInterval(previewFunction,1000 / 3);
+	
 }
 
 var calculateMousePos = (event) => {

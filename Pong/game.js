@@ -1,5 +1,5 @@
 
-let canvas;
+var canvas;
 let canvasContext;
 
 let framesPerSecond = 60;
@@ -9,7 +9,7 @@ let ball = {
 	y: 0,
 	radius: 10,
 	motion: {
-		x: 5,
+		x: 6,
 		y: 5
 	},
 	color: 'white'
@@ -39,22 +39,13 @@ window.onload = function(){
 	canvas = document.getElementById('gameCanvas');
 	canvasContext = canvas.getContext('2d');
 
-	initializeEvents(resetGame);
-
 	resetBall();
-	/*document.addEventListener('keydown',(event) => {
-		//console.log('HEY');
-		switch(event.keyCode){
-			case 38:
-				leftPadle.y -= 15;
-				break;
-			case 40:
-				leftPadle.y += 15;
-				break;
-		}
-	},false);*/
 
-	canvas.addEventListener('mousemove',(event) => {
+	const previewGame = () => {
+		return;
+	}
+
+	const updatePlayersPadlePosition = (event) => {
 
 		let mouseY = calculateMousePos(event).y;
 		let posY = mouseY;
@@ -64,7 +55,9 @@ window.onload = function(){
 		else posY = mouseY - leftPadle.height/2;
 
 		leftPadle.y = posY;
-	});
+	};
+
+	initializeEvents(canvas,game,resetGame,previewGame,updatePlayersPadlePosition);
 }
 
 const resetBall = () => {
@@ -128,9 +121,6 @@ const game = () => {
 
 		const predictYcoord = () => {
 
-			/*let phantomBall = { x: 0, y: 0, radius: 10, motion: { x: 5, y: 5 }, color: 'white' };
-			phantomBall.color = 'red';*/
-
 			let phantomMotion = {x: ball.motion.x, y: ball.motion.y};
 			let phantomPosition = {x: ball.x, y: ball.y};
 
@@ -140,10 +130,6 @@ const game = () => {
 
 				if( (phantomPosition.x + phantomMotion.x) < 0 || (phantomPosition.x + phantomMotion.x) > canvas.width ) phantomMotion.x *= -1;
 				if( (phantomPosition.y + phantomMotion.y) < 0 || (phantomPosition.y + phantomMotion.y) > canvas.height ) phantomMotion.y *= -1;
-
-				/*phantomBall.x = phantomPosition.x;
-				phantomBall.y = phantomPosition.y;
-				printBall(phantomBall);*/
 
 				if( phantomPosition.x == 0 || phantomPosition.x == canvas.width) return phantomPosition.y;
 			}
